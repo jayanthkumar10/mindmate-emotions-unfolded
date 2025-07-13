@@ -196,11 +196,33 @@ export default function Chat() {
                 animate={{ opacity: 1, scale: 1 }}
                 className="text-center py-12"
               >
-                <MessageCircle className="w-16 h-16 text-slate-400 mx-auto mb-4" />
-                <h3 className="text-lg font-medium text-white mb-2">Start a conversation</h3>
-                <p className="text-slate-400 max-w-md mx-auto">
-                  I'm here to listen and support you. Share what's on your mind, and I'll help you process your thoughts and feelings.
+                <div className="w-20 h-20 mx-auto mb-6 rounded-full bg-gradient-to-r from-coral-400/20 to-lavender-400/20 flex items-center justify-center">
+                  <MessageCircle className="w-10 h-10 text-coral-400" />
+                </div>
+                <h3 className="text-xl font-medium text-white mb-3">Welcome to MindMate AI</h3>
+                <p className="text-slate-300 max-w-lg mx-auto mb-6 leading-relaxed">
+                  I'm your compassionate AI companion, here to provide emotional support and insights. 
+                  I can help you process feelings, work through challenges, and celebrate your growth.
                 </p>
+                
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 max-w-2xl mx-auto">
+                  <div className="bg-white/5 rounded-lg p-4 border border-white/10">
+                    <h4 className="text-coral-400 font-medium mb-2">💭 Feeling Overwhelmed?</h4>
+                    <p className="text-slate-400 text-sm">"I'm feeling stressed about work and don't know how to manage it all."</p>
+                  </div>
+                  <div className="bg-white/5 rounded-lg p-4 border border-white/10">
+                    <h4 className="text-lavender-400 font-medium mb-2">🌱 Personal Growth</h4>
+                    <p className="text-slate-400 text-sm">"How can I build better habits and stay motivated?"</p>
+                  </div>
+                  <div className="bg-white/5 rounded-lg p-4 border border-white/10">
+                    <h4 className="text-coral-400 font-medium mb-2">💙 Relationship Support</h4>
+                    <p className="text-slate-400 text-sm">"I'm having trouble communicating with someone I care about."</p>
+                  </div>
+                  <div className="bg-white/5 rounded-lg p-4 border border-white/10">
+                    <h4 className="text-lavender-400 font-medium mb-2">✨ Celebrating Wins</h4>
+                    <p className="text-slate-400 text-sm">"I accomplished something important and want to share!"</p>
+                  </div>
+                </div>
               </motion.div>
             )}
 
@@ -273,9 +295,9 @@ export default function Chat() {
                 value={inputMessage}
                 onChange={(e) => setInputMessage(e.target.value)}
                 onKeyPress={handleKeyPress}
-                placeholder="Type your message..."
+                placeholder={messages.length === 0 ? "Share what's on your mind..." : "Continue the conversation..."}
                 disabled={loading}
-                className="flex-1 bg-white/5 border-white/10 focus:border-coral-400 text-white"
+                className="flex-1 bg-white/5 border-white/10 focus:border-coral-400 text-white placeholder:text-slate-400"
               />
               <Button
                 onClick={sendMessage}

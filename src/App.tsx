@@ -12,6 +12,7 @@ import Journal from "./pages/Journal";
 import Chat from "./pages/Chat";
 import Insights from "./pages/Insights";
 import Settings from "./pages/Settings";
+import Debug from "./pages/Debug";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -32,6 +33,7 @@ const App = () => (
               <Route path="chat" element={<Chat />} />
               <Route path="insights" element={<Insights />} />
               <Route path="settings" element={<Settings />} />
+              <Route path="debug" element={<Debug />} />
             </Route>
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />
