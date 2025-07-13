@@ -64,6 +64,7 @@ export const Navigation = () => {
             </Button>
             <Button 
               className="bg-gradient-to-r from-coral-500 to-coral-600 hover:from-coral-600 hover:to-coral-700 text-white shadow-lg"
+              onClick={() => window.location.href = '/auth'}
             >
               Start Your Journey
             </Button>
@@ -103,7 +104,10 @@ export const Navigation = () => {
                 <Button variant="ghost" className="text-white justify-start">
                   Experience Demo
                 </Button>
-                <Button className="bg-gradient-to-r from-coral-500 to-coral-600 text-white justify-start">
+                <Button 
+                  className="bg-gradient-to-r from-coral-500 to-coral-600 text-white justify-start"
+                  onClick={() => window.location.href = '/auth'}
+                >
                   Start Your Journey
                 </Button>
               </div>
