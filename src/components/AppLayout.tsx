@@ -1,7 +1,7 @@
 import { Navigate, Outlet } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { useAuth } from '@/hooks/useAuth';
-import { AppSidebar } from '@/components/AppSidebar';
+import { YouTubeSidebar } from '@/components/YouTubeSidebar';
 import { SidebarProvider } from '@/components/ui/sidebar';
 
 export default function AppLayout() {
@@ -25,9 +25,9 @@ export default function AppLayout() {
 
   return (
     <SidebarProvider>
-      <div className="min-h-screen w-full bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900">
-        <AppSidebar />
-        <main className="flex-1 p-6">
+      <div className="min-h-screen w-full flex bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900">
+        <YouTubeSidebar />
+        <main className="flex-1 p-6 ml-0">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
