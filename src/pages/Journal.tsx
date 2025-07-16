@@ -64,15 +64,19 @@ export default function Journal() {
       // Analyze entry with AI
       let analysisData = null;
       try {
-        const { data, error } = await supabase.functions.invoke('ai-companion', {
-          body: {
+        const response = await fetch(`https://ncrzjqerxvtdnpkysdcq.functions.supabase.co/ai-companion`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
             message: currentEntry.content,
             type: 'analyze_journal',
-          },
+          }),
         });
         
-        if (!error && data) {
-          analysisData = data;
+        if (response.ok) {
+          analysisData = await response.json();
         }
       } catch (error) {
         console.error('AI analysis failed:', error);

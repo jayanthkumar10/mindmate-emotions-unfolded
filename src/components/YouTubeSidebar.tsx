@@ -42,7 +42,7 @@ const settingsItems = [
 ];
 
 export function YouTubeSidebar() {
-  const { state } = useSidebar();
+  const { state, toggleSidebar } = useSidebar();
   const collapsed = state === 'collapsed';
   const location = useLocation();
   const { user, signOut } = useAuth();
@@ -153,7 +153,14 @@ export function YouTubeSidebar() {
               </motion.div>
             )}
           </AnimatePresence>
-          <SidebarTrigger className="text-slate-400 hover:text-white transition-colors" />
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={toggleSidebar}
+            className="text-slate-400 hover:text-white transition-colors p-1"
+          >
+            <Menu className="w-5 h-5" />
+          </Button>
         </div>
       </SidebarHeader>
 

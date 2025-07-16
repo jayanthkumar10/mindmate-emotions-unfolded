@@ -15,6 +15,8 @@ import Growth from "./pages/Growth";
 import AIInsights from "./pages/AIInsights";
 import Settings from "./pages/Settings";
 import Debug from "./pages/Debug";
+import Profile from "./pages/Profile";
+import MoodCalendar from "./pages/MoodCalendar";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -30,14 +32,16 @@ const App = () => (
             <Route path="/" element={<Index />} />
             <Route path="/auth" element={<Auth />} />
             <Route path="/app" element={<AppLayout />}>
-            <Route path="dashboard" element={<Dashboard />} />
-            <Route path="journal" element={<Journal />} />
-            <Route path="chat" element={<Chat />} />
-            <Route path="insights" element={<Insights />} />
-            <Route path="growth" element={<Growth />} />
-            <Route path="ai-insights" element={<AIInsights />} />
-            <Route path="settings" element={<Settings />} />
-            <Route path="debug" element={<Debug />} />
+              <Route path="dashboard" element={<Dashboard />} />
+              <Route path="journal" element={<Journal />} />
+              <Route path="chat" element={<Chat />} />
+              <Route path="insights" element={<Insights />} />
+              <Route path="growth" element={<Growth />} />
+              <Route path="ai-insights" element={<AIInsights />} />
+              <Route path="profile" element={<Profile />} />
+              <Route path="calendar" element={<MoodCalendar />} />
+              <Route path="settings" element={<Settings />} />
+              <Route path="debug" element={<Debug />} />
             </Route>
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />

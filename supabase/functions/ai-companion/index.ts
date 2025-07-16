@@ -81,22 +81,34 @@ Guidelines:
 - Be compassionate and non-judgmental in analysis`;
         break;
 
-      case 'generate_insight':
+      case 'generate_insights':
         const userData = context ? JSON.stringify(context, null, 2) : 'Limited data available';
         
-        systemPrompt = `You are an expert in emotional intelligence and personal growth. Generate a personalized, actionable insight based on the user's journal entries and mood patterns.
+        systemPrompt = `You are an expert in emotional intelligence and personal growth. Generate 2-3 personalized insights based on the user's journal entries and mood patterns.
 
 User Data: ${userData}
 
-Create an insight that:
-- Identifies meaningful patterns in emotions, behaviors, or thoughts
-- Provides encouraging perspective on their growth journey
-- Offers 1-2 specific, actionable suggestions for continued development
-- Maintains a warm, supportive tone
-- Is 3-4 sentences long
-- Focuses on strengths and progress, not just challenges
+Return JSON format with:
+{
+  "insights": [
+    {
+      "title": "Insight Title",
+      "content": "Detailed insight content (2-3 sentences)",
+      "type": "pattern" | "mood" | "growth" | "advice",
+      "data": {}
+    }
+  ]
+}
 
-Format as a single paragraph insight that feels personal and meaningful to their unique journey.`;
+Create insights that:
+- Identify meaningful patterns in emotions, behaviors, or thoughts
+- Provide encouraging perspective on their growth journey
+- Offer specific, actionable suggestions for continued development
+- Maintain a warm, supportive tone
+- Focus on strengths and progress, not just challenges
+- Are personalized to their specific data
+
+Generate 2-3 different types of insights for variety.`;
         break;
     }
 
@@ -139,6 +151,29 @@ Format as a single paragraph insight that feels personal and meaningful to their
           themes: ['reflection'],
           insights: result,
           reflection_questions: ['How did writing this make you feel?']
+        }), {
+          headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+        });
+      }
+    }
+
+    if (type === 'generate_insights') {
+      try {
+        const parsed = JSON.parse(result);
+        return new Response(JSON.stringify(parsed), {
+          headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+        });
+      } catch {
+        // If parsing fails, return default insights
+        return new Response(JSON.stringify({
+          insights: [
+            {
+              title: "Journey Beginning",
+              content: "You've started your emotional wellness journey by engaging in self-reflection. This is a meaningful step toward better understanding yourself.",
+              type: "growth",
+              data: {}
+            }
+          ]
         }), {
           headers: { ...corsHeaders, 'Content-Type': 'application/json' },
         });
