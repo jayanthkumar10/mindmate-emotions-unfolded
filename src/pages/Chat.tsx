@@ -109,28 +109,23 @@ export default function Chat() {
       // Get context for AI
       const context = await getContextForAI();
 
-      // Send to AI
-      const response = await fetch(`https://ncrzjqerxvtdnpkysdcq.functions.supabase.co/ai-companion`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
+      // Send to AI using Supabase edge function invoke
+      const { data: aiData, error: functionError } = await supabase.functions.invoke('ai-companion', {
+        body: {
           message: userMessage.content,
           context,
           type: 'chat',
-        }),
+        },
       });
 
-      if (!response.ok) {
-        throw new Error('Failed to get AI response');
+      if (functionError) {
+        throw functionError;
       }
 
-      const aiData = await response.json();
       const aiMessage: Message = {
         id: (Date.now() + 1).toString(),
         type: 'ai',
-        content: aiData.response,
+        content: aiData.response || 'I apologize, but I encountered an issue processing your message. Please try again.',
         timestamp: new Date(),
       };
 

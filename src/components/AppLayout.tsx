@@ -27,7 +27,7 @@ export default function AppLayout() {
     <SidebarProvider>
       <div className="min-h-screen w-full flex bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900">
         <YouTubeSidebar />
-        <main className="flex-1 p-6 ml-0">
+        <main className="flex-1 p-6">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}

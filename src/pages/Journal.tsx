@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { Save, Calendar, Smile, Plus } from 'lucide-react';
+import { Save, Calendar, Plus } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -8,7 +8,6 @@ import { Textarea } from '@/components/ui/textarea';
 import { useAuth } from '@/hooks/useAuth';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
-import MoodSelector from '@/components/MoodSelector';
 
 export default function Journal() {
   const { user } = useAuth();
@@ -17,8 +16,7 @@ export default function Journal() {
   const [currentEntry, setCurrentEntry] = useState({
     title: '',
     content: '',
-    mood_value: null as number | null,
-    mood_label: '',
+    entry_date: new Date().toISOString().split('T')[0], // Current date in YYYY-MM-DD format
   });
   const [isEditing, setIsEditing] = useState(false);
   const [editingId, setEditingId] = useState<string | null>(null);
@@ -66,19 +64,15 @@ export default function Journal() {
       // Analyze entry with AI
       let analysisData = null;
       try {
-        const response = await fetch(`https://ncrzjqerxvtdnpkysdcq.functions.supabase.co/ai-companion`, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
+        const { data, error } = await supabase.functions.invoke('ai-companion', {
+          body: {
             message: currentEntry.content,
             type: 'analyze_journal',
-          }),
+          },
         });
         
-        if (response.ok) {
-          analysisData = await response.json();
+        if (!error && data) {
+          analysisData = data;
         }
       } catch (error) {
         console.error('AI analysis failed:', error);
@@ -86,10 +80,9 @@ export default function Journal() {
 
       const entryData = {
         user_id: user?.id,
-        title: currentEntry.title || `Entry from ${new Date().toLocaleDateString()}`,
+        title: currentEntry.title || `Entry from ${new Date(currentEntry.entry_date).toLocaleDateString()}`,
         content: currentEntry.content,
-        mood_value: currentEntry.mood_value,
-        mood_label: currentEntry.mood_label,
+        created_at: new Date(currentEntry.entry_date).toISOString(),
         themes: analysisData?.themes || [],
         sentiment_score: analysisData?.sentiment_score || null,
       };
@@ -116,7 +109,7 @@ export default function Journal() {
       });
 
       // Reset form
-      setCurrentEntry({ title: '', content: '', mood_value: null, mood_label: '' });
+      setCurrentEntry({ title: '', content: '', entry_date: new Date().toISOString().split('T')[0] });
       setIsEditing(false);
       setEditingId(null);
       fetchEntries();
@@ -136,25 +129,16 @@ export default function Journal() {
     setCurrentEntry({
       title: entry.title,
       content: entry.content,
-      mood_value: entry.mood_value,
-      mood_label: entry.mood_label,
+      entry_date: new Date(entry.created_at).toISOString().split('T')[0],
     });
     setEditingId(entry.id);
     setIsEditing(true);
   };
 
   const handleNewEntry = () => {
-    setCurrentEntry({ title: '', content: '', mood_value: null, mood_label: '' });
+    setCurrentEntry({ title: '', content: '', entry_date: new Date().toISOString().split('T')[0] });
     setEditingId(null);
     setIsEditing(true);
-  };
-
-  const handleMoodSelect = (value: number) => {
-    setCurrentEntry(prev => ({
-      ...prev,
-      mood_value: value,
-      mood_label: moodLabels[value - 1],
-    }));
   };
 
   return (
@@ -192,12 +176,20 @@ export default function Journal() {
               </CardTitle>
             </CardHeader>
             <CardContent className="space-y-4">
-              <Input
-                placeholder="Entry title (optional)"
-                value={currentEntry.title}
-                onChange={(e) => setCurrentEntry(prev => ({ ...prev, title: e.target.value }))}
-                className="bg-white/5 border-white/10 focus:border-coral-400 text-white"
-              />
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <Input
+                  placeholder="Entry title (optional)"
+                  value={currentEntry.title}
+                  onChange={(e) => setCurrentEntry(prev => ({ ...prev, title: e.target.value }))}
+                  className="bg-white/5 border-white/10 focus:border-coral-400 text-white"
+                />
+                <Input
+                  type="date"
+                  value={currentEntry.entry_date}
+                  onChange={(e) => setCurrentEntry(prev => ({ ...prev, entry_date: e.target.value }))}
+                  className="bg-white/5 border-white/10 focus:border-coral-400 text-white"
+                />
+              </div>
               
               <Textarea
                 placeholder="What's on your mind today? Write freely about your thoughts, feelings, and experiences..."
@@ -206,24 +198,13 @@ export default function Journal() {
                 className="min-h-[300px] bg-white/5 border-white/10 focus:border-coral-400 text-white resize-none"
               />
 
-              <div className="space-y-4">
-                <div className="flex items-center space-x-2 text-white">
-                  <Smile className="w-4 h-4 text-coral-400" />
-                  <span className="text-sm">How are you feeling?</span>
-                </div>
-                <MoodSelector 
-                  onMoodSelect={handleMoodSelect}
-                  selectedMood={currentEntry.mood_value || undefined}
-                />
-              </div>
-
               <div className="flex justify-end space-x-2">
                 {isEditing && (
                   <Button
                     onClick={() => {
                       setIsEditing(false);
                       setEditingId(null);
-                      setCurrentEntry({ title: '', content: '', mood_value: null, mood_label: '' });
+                      setCurrentEntry({ title: '', content: '', entry_date: new Date().toISOString().split('T')[0] });
                     }}
                     variant="outline"
                     className="border-white/20 text-white hover:bg-white/10"
@@ -285,12 +266,6 @@ export default function Journal() {
                     <p className="text-slate-300 text-sm line-clamp-3 mb-3">
                       {entry.content}
                     </p>
-                    
-                    {entry.mood_label && (
-                      <span className="inline-block px-2 py-1 bg-coral-500/20 text-coral-400 text-xs rounded-full">
-                        {entry.mood_label}
-                      </span>
-                    )}
                     
                     {entry.themes && entry.themes.length > 0 && (
                       <div className="mt-2 flex flex-wrap gap-1">

@@ -1,5 +1,5 @@
 import { useLocation, NavLink } from 'react-router-dom';
-import { Home, BookOpen, MessageCircle, BarChart3, Settings, LogOut, TrendingUp, Sparkles, Calendar, User, PlusCircle } from 'lucide-react';
+import { Home, BookOpen, MessageCircle, BarChart3, Settings, LogOut, TrendingUp, Sparkles, Calendar, User, PlusCircle, Menu } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
   Sidebar,
@@ -12,6 +12,7 @@ import {
   SidebarMenuItem,
   SidebarHeader,
   SidebarFooter,
+  SidebarTrigger,
   useSidebar,
 } from '@/components/ui/sidebar';
 import { useAuth } from '@/hooks/useAuth';
@@ -122,35 +123,38 @@ export function YouTubeSidebar() {
   return (
     <Sidebar className={`${collapsed ? 'w-16' : 'w-72'} border-r border-white/10 bg-slate-900/95 backdrop-blur-xl transition-all duration-300`}>
       <SidebarHeader className="p-4 border-b border-white/10">
-        <AnimatePresence mode="wait">
-          {!collapsed ? (
-            <motion.div
-              initial={{ opacity: 0, x: -20 }}
-              animate={{ opacity: 1, x: 0 }}
-              exit={{ opacity: 0, x: -20 }}
-              className="flex items-center space-x-3"
-            >
-              <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-coral-400 to-lavender-400 flex items-center justify-center shadow-lg">
-                <span className="text-white font-bold text-lg">M</span>
-              </div>
-              <div>
-                <h2 className="font-bold text-white text-lg">MindMate</h2>
-                <p className="text-xs text-slate-400">AI Wellness Companion</p>
-              </div>
-            </motion.div>
-          ) : (
-            <motion.div
-              initial={{ opacity: 0, scale: 0.8 }}
-              animate={{ opacity: 1, scale: 1 }}
-              exit={{ opacity: 0, scale: 0.8 }}
-              className="flex justify-center"
-            >
-              <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-coral-400 to-lavender-400 flex items-center justify-center shadow-lg">
-                <span className="text-white font-bold text-lg">M</span>
-              </div>
-            </motion.div>
-          )}
-        </AnimatePresence>
+        <div className="flex items-center justify-between">
+          <AnimatePresence mode="wait">
+            {!collapsed ? (
+              <motion.div
+                initial={{ opacity: 0, x: -20 }}
+                animate={{ opacity: 1, x: 0 }}
+                exit={{ opacity: 0, x: -20 }}
+                className="flex items-center space-x-3"
+              >
+                <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-coral-400 to-lavender-400 flex items-center justify-center shadow-lg">
+                  <span className="text-white font-bold text-lg">M</span>
+                </div>
+                <div>
+                  <h2 className="font-bold text-white text-lg">MindMate</h2>
+                  <p className="text-xs text-slate-400">AI Wellness Companion</p>
+                </div>
+              </motion.div>
+            ) : (
+              <motion.div
+                initial={{ opacity: 0, scale: 0.8 }}
+                animate={{ opacity: 1, scale: 1 }}
+                exit={{ opacity: 0, scale: 0.8 }}
+                className="flex justify-center"
+              >
+                <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-coral-400 to-lavender-400 flex items-center justify-center shadow-lg">
+                  <span className="text-white font-bold text-lg">M</span>
+                </div>
+              </motion.div>
+            )}
+          </AnimatePresence>
+          <SidebarTrigger className="text-slate-400 hover:text-white transition-colors" />
+        </div>
       </SidebarHeader>
 
       <SidebarContent className="p-2">
