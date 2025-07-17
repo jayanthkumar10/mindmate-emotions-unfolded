@@ -61,22 +61,18 @@ export default function Journal() {
     setLoading(true);
     
     try {
-      // Analyze entry with AI
+      // Analyze entry with AI using Supabase function invoke
       let analysisData = null;
       try {
-        const response = await fetch(`https://ncrzjqerxvtdnpkysdcq.functions.supabase.co/ai-companion`, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
+        const { data: aiData, error: functionError } = await supabase.functions.invoke('ai-companion', {
+          body: {
             message: currentEntry.content,
             type: 'analyze_journal',
-          }),
+          },
         });
         
-        if (response.ok) {
-          analysisData = await response.json();
+        if (!functionError && aiData) {
+          analysisData = aiData;
         }
       } catch (error) {
         console.error('AI analysis failed:', error);

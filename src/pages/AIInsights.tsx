@@ -84,13 +84,9 @@ export default function AIInsights() {
         return;
       }
 
-      // Call AI service to generate insights
-      const response = await fetch(`https://ncrzjqerxvtdnpkysdcq.functions.supabase.co/ai-companion`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
+      // Call AI service to generate insights using Supabase function invoke
+      const { data: aiResponse, error: functionError } = await supabase.functions.invoke('ai-companion', {
+        body: {
           message: `Generate personalized insights about my emotional wellness journey. I have ${journalEntries.length} journal entries and ${moodEntries?.length || 0} mood entries.`,
           type: 'generate_insights',
           context: {
@@ -98,14 +94,12 @@ export default function AIInsights() {
             moodEntries: moodEntries || [],
             userId: user?.id,
           },
-        }),
+        },
       });
 
-      if (!response.ok) {
+      if (functionError) {
         throw new Error('Failed to generate insights');
       }
-
-      const aiResponse = await response.json();
       
       // Create mock insights if AI doesn't return proper format
       let insightsToCreate = [];

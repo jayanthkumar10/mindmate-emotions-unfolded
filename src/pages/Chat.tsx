@@ -60,26 +60,34 @@ export default function Chat() {
   };
 
   const getContextForAI = async () => {
-    // Get recent journal entries for context
+    // Get ALL journal entries for comprehensive knowledge base
     const { data: journalEntries } = await supabase
       .from('journal_entries')
-      .select('content, mood_label, themes, created_at')
+      .select('content, title, themes, sentiment_score, mood_label, mood_value, created_at')
       .eq('user_id', user?.id)
-      .order('created_at', { ascending: false })
-      .limit(3);
+      .order('created_at', { ascending: false });
 
-    // Get recent mood entries
+    // Get ALL mood entries for pattern analysis
     const { data: moodEntries } = await supabase
       .from('mood_entries')
       .select('mood_value, mood_label, created_at')
       .eq('user_id', user?.id)
-      .order('created_at', { ascending: false })
-      .limit(5);
+      .order('created_at', { ascending: false });
+
+    // Get user profile for personalization
+    const { data: profile } = await supabase
+      .from('profiles')
+      .select('display_name')
+      .eq('user_id', user?.id)
+      .single();
 
     return {
-      recentJournalEntries: journalEntries || [],
-      recentMoods: moodEntries || [],
-      conversationHistory: messages.slice(-6), // Last 6 messages for context
+      allJournalEntries: journalEntries || [],
+      allMoodEntries: moodEntries || [],
+      userProfile: profile,
+      conversationHistory: messages.slice(-10), // Extended context
+      totalEntries: journalEntries?.length || 0,
+      totalMoods: moodEntries?.length || 0,
     };
   };
 
