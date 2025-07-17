@@ -12,11 +12,11 @@ import Journal from "./pages/Journal";
 import Chat from "./pages/Chat";
 import Insights from "./pages/Insights";
 import Growth from "./pages/Growth";
-import AIInsights from "./pages/AIInsights";
 import Settings from "./pages/Settings";
 import Debug from "./pages/Debug";
 import Profile from "./pages/Profile";
 import MoodCalendar from "./pages/MoodCalendar";
+import VoiceChat from "./pages/VoiceChat";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -35,9 +35,9 @@ const App = () => (
               <Route path="dashboard" element={<Dashboard />} />
               <Route path="journal" element={<Journal />} />
               <Route path="chat" element={<Chat />} />
+              <Route path="voice-chat" element={<VoiceChat />} />
               <Route path="insights" element={<Insights />} />
               <Route path="growth" element={<Growth />} />
-              <Route path="ai-insights" element={<AIInsights />} />
               <Route path="profile" element={<Profile />} />
               <Route path="calendar" element={<MoodCalendar />} />
               <Route path="settings" element={<Settings />} />

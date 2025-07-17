@@ -280,6 +280,14 @@ export default function Dashboard() {
       notification: false,
     },
     {
+      title: 'Voice Chat',
+      description: 'Natural conversation',
+      icon: Sparkles,
+      action: () => navigate('/app/voice-chat'),
+      color: 'from-purple-400 to-purple-600',
+      notification: false,
+    },
+    {
       title: 'View Insights',
       description: stats.unreadInsights > 0 ? `${stats.unreadInsights} new insights` : 'Explore your patterns',
       icon: BarChart3,

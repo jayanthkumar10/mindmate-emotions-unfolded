@@ -117,23 +117,34 @@ export default function Chat() {
       // Get context for AI
       const context = await getContextForAI();
 
-      // Send to AI using Supabase edge function invoke
-      const { data: aiData, error: functionError } = await supabase.functions.invoke('ai-companion', {
-        body: {
-          message: userMessage.content,
-          context,
-          type: 'chat',
-        },
-      });
+      // Send to AI using Supabase edge function invoke with error handling
+      let aiResponse;
+      let fallbackResponse = "I'm here to listen and support you. While I'm experiencing some technical difficulties right now, I can still offer you emotional support and encouragement. What's on your mind today?";
+      
+      try {
+        const { data: aiData, error: functionError } = await supabase.functions.invoke('ai-companion', {
+          body: {
+            message: userMessage.content,
+            context,
+            type: 'chat',
+          },
+        });
 
-      if (functionError) {
-        throw functionError;
+        if (functionError) {
+          console.error('AI function error:', functionError);
+          aiResponse = fallbackResponse;
+        } else {
+          aiResponse = aiData?.response || fallbackResponse;
+        }
+      } catch (error) {
+        console.error('AI service error:', error);
+        aiResponse = fallbackResponse;
       }
 
       const aiMessage: Message = {
         id: (Date.now() + 1).toString(),
         type: 'ai',
-        content: aiData.response || 'I apologize, but I encountered an issue processing your message. Please try again.',
+        content: aiResponse,
         timestamp: new Date(),
       };
 
@@ -204,8 +215,8 @@ export default function Chat() {
                 </div>
                 <h3 className="text-xl font-medium text-white mb-3">Welcome to MindMate AI</h3>
                 <p className="text-slate-300 max-w-lg mx-auto mb-6 leading-relaxed">
-                  I'm your compassionate AI companion, here to provide emotional support and insights. 
-                  I can help you process feelings, work through challenges, and celebrate your growth.
+                  I'm your compassionate AI companion, here to provide emotional support and insights based on your journal entries. 
+                  I can help you process feelings, work through challenges, and celebrate your growth journey.
                 </p>
                 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4 max-w-2xl mx-auto">

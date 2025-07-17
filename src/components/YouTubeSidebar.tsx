@@ -27,13 +27,13 @@ const mainItems = [
   { title: 'Dashboard', url: '/app/dashboard', icon: Home },
   { title: 'Journal', url: '/app/journal', icon: BookOpen },
   { title: 'Chat', url: '/app/chat', icon: MessageCircle },
+  { title: 'Voice Chat', url: '/app/voice-chat', icon: Sparkles },
   { title: 'Insights', url: '/app/insights', icon: BarChart3 },
 ];
 
 const exploreItems = [
   { title: 'Growth Journey', url: '/app/growth', icon: TrendingUp },
   { title: 'Mood Calendar', url: '/app/calendar', icon: Calendar },
-  { title: 'AI Insights', url: '/app/ai-insights', icon: Sparkles },
 ];
 
 const settingsItems = [
